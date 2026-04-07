@@ -108,3 +108,9 @@ print("CSV saved: hmrc_eur_gbp_2025_26.csv")
 # Preview
 rates_export
 ```
+
+------------------------------------------------------------------------
+
+### My other repositories:
+
+[Tools for Narrative-Friendly Reporting](https://github.com/roseneath12/reportmagic)
