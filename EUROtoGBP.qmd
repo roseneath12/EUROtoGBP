@@ -1,0 +1,100 @@
+---
+title: "HMRC Euro to GBP Monthly Rates 2025/26"
+format: html
+editor: visual
+---
+
+```{r setup, include=FALSE}
+library(tidyverse)
+library(httr2)
+library(jsonlite)
+library(lubridate)
+library(kableExtra)
+```
+
+## Fixed Rate Extraction
+
+```{r fetch-rates-final}
+# Define months for FY 2025/26 (April 2025 - March 2026)
+fy_months <- seq(as.Date("2025-04-01"), as.Date("2026-03-01"), by = "month") %>%
+  format("%Y-%m")
+
+# Function to fetch rate for a month
+fetch_hmrc_rate <- function(month_ym) {
+  year_mon <- str_replace(month_ym, "-", "/")
+  url <- paste0("https://hmrc.matchilling.com/rate/", year_mon, ".json")
+  
+  resp <- request(url) %>%
+    req_timeout(10) %>%
+    req_perform()
+  
+  if (resp_status(resp) == 200) {
+    data <- resp %>%
+      resp_body_json(simplifyVector = TRUE) %>%
+      .$rates %>%
+      enframe(name = "currency", value = "rate") %>%
+      filter(currency == "EUR") %>%
+      mutate(
+        month = month_ym,
+        period_start = ymd(paste0(month_ym, "-01")),
+        period_end = period_start %m+% months(1) - days(1),
+        eur_per_gbp = as.numeric(rate)
+      ) %>%
+      select(month, eur_per_gbp, period_start, period_end)
+    return(data)
+  } else {
+    tibble(
+      month = month_ym, 
+      eur_per_gbp = NA_real_,
+      period_start = ymd(paste0(month_ym, "-01")),
+      period_end = period_start %m+% months(1) - days(1)
+    )
+  }
+}
+
+# Fetch all months
+rates <- map_df(fy_months, fetch_hmrc_rate)
+
+rates
+```
+
+## Clean Table with kableExtra (Fixed)
+
+```{r summary-table-kable}
+rates %>%
+  mutate(
+    month_display = month,
+    eur_per_gbp = round(eur_per_gbp, 4),
+    gbp_per_eur = round(1/eur_per_gbp, 4)
+  ) %>%
+  select(month_display, eur_per_gbp, gbp_per_eur) %>%
+  kbl(
+    caption = "HMRC Monthly EUR/GBP Rates FY 2025/26",
+    col.names = c("Month", "EUR per £1", "£1 per EUR")
+  ) %>%
+  kable_styling(
+    bootstrap_options = c("striped", "hover", "condensed"),
+    full_width = FALSE
+  ) %>%
+  # Fixed: pack_rows() doesn't accept font_size argument
+  pack_rows("2025", 1, 9) %>%
+  pack_rows("2026", 10, 12)
+```
+
+## CSV Export for Tax Returns
+
+```{r export}
+# Save clean CSV for HMRC filing
+rates_export <- rates %>%
+  select(month, eur_per_gbp) %>%
+  mutate(
+    eur_per_gbp = round(eur_per_gbp, 4),
+    gbp_per_eur = round(1/eur_per_gbp, 4)
+  )
+
+write_csv(rates_export, "hmrc_eur_gbp_2025_26.csv")
+print("CSV saved: hmrc_eur_gbp_2025_26.csv")
+
+# Preview
+rates_export
+```
