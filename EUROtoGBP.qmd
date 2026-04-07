@@ -2,6 +2,8 @@
 title: "HMRC Euro to GBP Monthly Rates 2025/26"
 format: html
 editor: visual
+output-file: index.html
+output-dir: docs
 ---
 
 ```{r setup, include=FALSE}
@@ -12,11 +14,13 @@ library(lubridate)
 library(kableExtra)
 ```
 
-If you only need a list of monthly Euro‑to‑Sterling rates for FY 2025-26, the code below automatically loads the twelve monthly HMRC CSV files, identifies the EUR entry in each dataset, and compiles the results into a single table.
+If you need a simple list of monthly Euro‑to‑Sterling rates for FY 2025‑26, the code below loads all twelve HMRC CSV files, extracts the EUR rate from each one, and combines the results into a single table.
+
+Si necesitas una lista sencilla de los tipos de cambio mensuales de euro a libra esterlina para el ejercicio 2025‑26, el código de abajo carga los doce archivos CSV mensuales de HMRC, extrae el valor del EUR de cada uno y combina los resultados en una sola tabla.
 
 ## Monthly rate extraction
 
-This code retrieves monthly EUR/GBP rates using the open HMRC Exchange Rates API created by [Matías J. Schilling](https://github.com/matchilling/hmrc-exchange-rates)
+This R code retrieves the [HMRC monthly Euro to Sterling exchange rates](https://www.trade-tariff.service.gov.uk/exchange_rates) using the open API developed by [Matías J. S](https://github.com/matchilling/hmrc-exchange-rates) , returning them in a tidy format.
 
 ```{r fetch-rates-final}
 # Define months for FY 2025/26 (April 2025 - March 2026)
@@ -63,6 +67,8 @@ rates <- map_df(fy_months, fetch_hmrc_rate)
 
 ## View the table
 
+This bit creates a simple table visualization for the html file
+
 ```{r summary-table-kable}
 rates %>%
   mutate(
@@ -73,7 +79,7 @@ rates %>%
   select(month_display, eur_per_gbp, gbp_per_eur) %>%
   kbl(
     caption = "HMRC Monthly EUR/GBP Rates FY 2025/26",
-    col.names = c("Month", "EUR per £1", "£1 per EUR")
+    col.names = c("Month", "€ per £1", "£ per €1")
   ) %>%
   kable_styling(
     bootstrap_options = c("striped", "hover", "condensed"),
@@ -87,7 +93,7 @@ rates %>%
 
 ## Export it for your Tax Returns
 
-In a simple csv file with only the 12 month you need and the currency you need. (if you are looking for any other currency , just change the bit in the code **filter(currency == "EUR")**
+Here, we save the csv file with the 12 months you need and the currency you need. (if you are looking for any other currency , just change the line in the first chunck of code to match your currency **filter(currency == "EUR")**
 
 ```{r export}
 # Save clean CSV for HMRC filing
