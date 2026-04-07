@@ -12,7 +12,11 @@ library(lubridate)
 library(kableExtra)
 ```
 
-## Fixed Rate Extraction
+If you only need a list with the monthly Euro to Sterling rates for the financial year 2025-26:
+
+## Monthly rate extraction
+
+This code retrieves monthly EUR/GBP rates using the open HMRC Exchange Rates API created by [Matías J. Schilling](https://github.com/matchilling/hmrc-exchange-rates)
 
 ```{r fetch-rates-final}
 # Define months for FY 2025/26 (April 2025 - March 2026)
@@ -55,10 +59,9 @@ fetch_hmrc_rate <- function(month_ym) {
 # Fetch all months
 rates <- map_df(fy_months, fetch_hmrc_rate)
 
-rates
 ```
 
-## Clean Table with kableExtra (Fixed)
+## View the table
 
 ```{r summary-table-kable}
 rates %>%
@@ -81,7 +84,9 @@ rates %>%
   pack_rows("2026", 10, 12)
 ```
 
-## CSV Export for Tax Returns
+## Export it for your Tax Returns
+
+In a simple csv file with only the 12 month you need and the currency you need. (if you are looking for any other currency , just change the bit in the code **filter(currency == "EUR")**
 
 ```{r export}
 # Save clean CSV for HMRC filing
