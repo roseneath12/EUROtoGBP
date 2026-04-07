@@ -1,5 +1,6 @@
 ---
 title: "HMRC Euro to GBP Monthly Rates 2025/26"
+author: Inma
 format: html
 editor: visual
 output-file: index.html
