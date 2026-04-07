@@ -14,13 +14,11 @@ library(lubridate)
 library(kableExtra)
 ```
 
-If you need a simple list of monthly Euro‑to‑Sterling rates for FY 2025‑26, the code below loads all twelve HMRC CSV files, extracts the EUR rate from each one, and combines the results into a single table.
-
-Si necesitas una lista sencilla de los tipos de cambio mensuales de euro a libra esterlina para el ejercicio 2025‑26, el código de abajo carga los doce archivos CSV mensuales de HMRC, extrae el valor del EUR de cada uno y combina los resultados en una sola tabla.
-
 ## Monthly rate extraction
 
-This R code retrieves the [HMRC monthly Euro to Sterling exchange rates](https://www.trade-tariff.service.gov.uk/exchange_rates) using the open API developed by [Matías J. S](https://github.com/matchilling/hmrc-exchange-rates) , returning them in a tidy format.
+This code retrieves the monthly EUR→GBP exchange rates for the 2025-26 financial year by calling the open HMRC exchange‑rate API developed by [Matías J. S](https://github.com/matchilling/hmrc-exchange-rates). and assembling the Euro rate for each month into a single tidy table.
+
+You can double check values in the official site [HMRC monthly Euro to Sterling exchange rates](https://www.trade-tariff.service.gov.uk/exchange_rates)
 
 ```{r fetch-rates-final}
 # Define months for FY 2025/26 (April 2025 - March 2026)

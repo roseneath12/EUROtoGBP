@@ -103,11 +103,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<p>If you need a simple list of monthly Euro‑to‑Sterling rates for FY 2025‑26, the code below loads all twelve HMRC CSV files, extracts the EUR rate from each one, and combines the results into a single table.</p>
-<p>Si necesitas una lista sencilla de los tipos de cambio mensuales de euro a libra esterlina para el ejercicio 2025‑26, el código de abajo carga los doce archivos CSV mensuales de HMRC, extrae el valor del EUR de cada uno y combina los resultados en una sola tabla.</p>
 <section id="monthly-rate-extraction" class="level2">
 <h2 class="anchored" data-anchor-id="monthly-rate-extraction">Monthly rate extraction</h2>
-<p>This R code retrieves the <a href="https://www.trade-tariff.service.gov.uk/exchange_rates">HMRC monthly Euro to Sterling exchange rates</a> using the open API developed by <a href="https://github.com/matchilling/hmrc-exchange-rates">Matías J. S</a> , returning them in a tidy format.</p>
+<p>This code retrieves the monthly EUR→GBP exchange rates for the 2025-26 financial year by calling the open HMRC exchange‑rate API developed by <a href="https://github.com/matchilling/hmrc-exchange-rates">Matías J. S</a>. and assembling the Euro rate for each month into a single tidy table.</p>
+<p>You can double check values in the official site <a href="https://www.trade-tariff.service.gov.uk/exchange_rates">HMRC monthly Euro to Sterling exchange rates</a></p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Define months for FY 2025/26 (April 2025 - March 2026)</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>fy_months <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="fu">as.Date</span>(<span class="st">"2025-04-01"</span>), <span class="fu">as.Date</span>(<span class="st">"2026-03-01"</span>), <span class="at">by =</span> <span class="st">"month"</span>) <span class="sc">%&gt;%</span></span>
