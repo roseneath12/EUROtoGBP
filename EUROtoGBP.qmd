@@ -82,6 +82,7 @@ rates %>%
   # Fixed: pack_rows() doesn't accept font_size argument
   pack_rows("2025", 1, 9) %>%
   pack_rows("2026", 10, 12)
+
 ```
 
 ## Export it for your Tax Returns
