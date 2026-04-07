@@ -12,7 +12,7 @@ library(lubridate)
 library(kableExtra)
 ```
 
-If you only need a list with the monthly Euro to Sterling rates for the financial year 2025-26:
+If you only need a list of monthly Euro‑to‑Sterling rates for FY 2025-26, the code below automatically loads the twelve monthly HMRC CSV files, identifies the EUR entry in each dataset, and compiles the results into a single table.
 
 ## Monthly rate extraction
 
