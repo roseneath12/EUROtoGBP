@@ -103,10 +103,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<p>If you only need a list of monthly Euro‑to‑Sterling rates for FY 2025-26, the code below automatically loads the twelve monthly HMRC CSV files, identifies the EUR entry in each dataset, and compiles the results into a single table.</p>
+<p>If you need a simple list of monthly Euro‑to‑Sterling rates for FY 2025‑26, the code below loads all twelve HMRC CSV files, extracts the EUR rate from each one, and combines the results into a single table.</p>
+<p>Si necesitas una lista sencilla de los tipos de cambio mensuales de euro a libra esterlina para el ejercicio 2025‑26, el código de abajo carga los doce archivos CSV mensuales de HMRC, extrae el valor del EUR de cada uno y combina los resultados en una sola tabla.</p>
 <section id="monthly-rate-extraction" class="level2">
 <h2 class="anchored" data-anchor-id="monthly-rate-extraction">Monthly rate extraction</h2>
-<p>This code retrieves monthly EUR/GBP rates using the open HMRC Exchange Rates API created by <a href="https://github.com/matchilling/hmrc-exchange-rates">Matías J. Schilling</a></p>
+<p>This R code retrieves the <a href="https://www.trade-tariff.service.gov.uk/exchange_rates">HMRC monthly Euro to Sterling exchange rates</a> using the open API developed by <a href="https://github.com/matchilling/hmrc-exchange-rates">Matías J. S</a> , returning them in a tidy format.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Define months for FY 2025/26 (April 2025 - March 2026)</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>fy_months <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="fu">as.Date</span>(<span class="st">"2025-04-01"</span>), <span class="fu">as.Date</span>(<span class="st">"2026-03-01"</span>), <span class="at">by =</span> <span class="st">"month"</span>) <span class="sc">%&gt;%</span></span>
@@ -151,6 +152,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="view-the-table" class="level2">
 <h2 class="anchored" data-anchor-id="view-the-table">View the table</h2>
+<p>This bit creates a simple table visualization for the html file</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>rates <span class="sc">%&gt;%</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
@@ -161,7 +163,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(month_display, eur_per_gbp, gbp_per_eur) <span class="sc">%&gt;%</span></span>
 <span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kbl</span>(</span>
 <span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">caption =</span> <span class="st">"HMRC Monthly EUR/GBP Rates FY 2025/26"</span>,</span>
-<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">col.names =</span> <span class="fu">c</span>(<span class="st">"Month"</span>, <span class="st">"EUR per £1"</span>, <span class="st">"£1 per EUR"</span>)</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">col.names =</span> <span class="fu">c</span>(<span class="st">"Month"</span>, <span class="st">"€ per £1"</span>, <span class="st">"£ per €1"</span>)</span>
 <span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
 <span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable_styling</span>(</span>
 <span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">bootstrap_options =</span> <span class="fu">c</span>(<span class="st">"striped"</span>, <span class="st">"hover"</span>, <span class="st">"condensed"</span>),</span>
@@ -176,8 +178,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <thead>
 <tr class="header">
 <th style="text-align: left;" data-quarto-table-cell-role="th">Month</th>
-<th style="text-align: right;" data-quarto-table-cell-role="th">EUR per £1</th>
-<th style="text-align: right;" data-quarto-table-cell-role="th">£1 per EUR</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">€ per £1</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">£ per €1</th>
 </tr>
 </thead>
 <tbody>
@@ -254,7 +256,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="export-it-for-your-tax-returns" class="level2">
 <h2 class="anchored" data-anchor-id="export-it-for-your-tax-returns">Export it for your Tax Returns</h2>
-<p>In a simple csv file with only the 12 month you need and the currency you need. (if you are looking for any other currency , just change the bit in the code <strong>filter(currency == “EUR”)</strong></p>
+<p>Here, we save the csv file with the 12 months you need and the currency you need. (if you are looking for any other currency , just change the line in the first chunck of code to match your currency <strong>filter(currency == “EUR”)</strong></p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Save clean CSV for HMRC filing</span></span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>rates_export <span class="ot">&lt;-</span> rates <span class="sc">%&gt;%</span></span>
